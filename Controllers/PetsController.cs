@@ -31,11 +31,19 @@ namespace TamagotchiAPI.Controllers
         // Returns a list of all your Pets
         //
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pet>>> GetPets()
+        public async Task<ActionResult<IEnumerable<Pet>>> GetPets(string search)
         {
             // Uses the database context in `_context` to request all of the Pets, sort
             // them by row id and return them as a JSON array.
-            return await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+            if (search == null)
+            {
+                return await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+
+            }
+            else
+            {
+                return await _context.Pets.Where(pet => pet.Name.ToLower().Contains(search.ToLower())).ToListAsync();
+            }
         }
 
         // GET: api/Pets/5
